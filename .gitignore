@@ -1,0 +1,7 @@
+# This stop git from tracking node_modules/
+# this is good because you'll be pushing hundreds of dependencies
+node_modules/
+# This ignores our environment files (we'll use some later)
+*.env
+Database/
+logs/

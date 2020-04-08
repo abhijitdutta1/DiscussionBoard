@@ -1,6 +1,13 @@
-const express = require('express');
-const app = express();
-const path    = require('path');
+const express         = require('express');
+const app             = express();
+const path            = require('path');
+const createDAO       = require('./Models/dao');
+// const ClassModel      = require('./Models/ClassModel');
+// const DiscussionModel = require('./Models/DiscussionModel');
+const UserModel       = require('./Models/UserModel');
+const AuthController  = require('./Controllers/AuthController');
+
+const dbFilePath = process.env.DB_FILE_PATH || path.join(__dirname, 'Database', 'Discussion.db');
 
 // gives direct access to GET files from the "public" directory 
 app.use(express.static('public'));
@@ -18,23 +25,6 @@ app.get('/', (req, res) => {
 
 app.get('/signup', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/html/signup.html'));
-});
-
-// test
-app.get('/iCourse', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/iCourse.html'));
-});
-
-app.get('/iDiscussion', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/iDiscussion.html'));
-});
-
-app.get('/sCourse', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/sCourse.html'));
-});
-
-app.get('/sDiscussion', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/sDiscussion.html'));
 });
 
 app.listen(80, 
