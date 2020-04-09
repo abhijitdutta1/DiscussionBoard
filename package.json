@@ -1,16 +1,25 @@
 {
-  "name": "project",
+  "name": "discussionboard",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "argon2": "^0.26.2",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Daiki Itoh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaikiCS/DiscussionBoard.git"
+  },
+  "author": "Abhijit Dutta",
   "license": "ISC",
-  "dependencies": {
-    "argon2": "^0.26.1",
-    "express": "^4.17.1",
-    "sqlite3": "^4.1.1"
-  }
+  "bugs": {
+    "url": "https://github.com/DaikiCS/DiscussionBoard/issues"
+  },
+  "homepage": "https://github.com/DaikiCS/DiscussionBoard#readme"
 }

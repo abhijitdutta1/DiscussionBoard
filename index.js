@@ -5,6 +5,10 @@ const createDAO       = require('./Models/dao');
 // const ClassModel      = require('./Models/ClassModel');
 // const DiscussionModel = require('./Models/DiscussionModel');
 const UserModel       = require('./Models/UserModel');
+const ClassModel      = require('./Models/ClassModel');
+const DiscussionModel = require('./Models/DiscussionModel');
+const RepliesModel    = require('./Models/ReplyModel');
+const Reply2replyModel= require('./Models/Reply2ReplyModel');
 const AuthController  = require('./Controllers/AuthController');
 
 const dbFilePath = process.env.DB_FILE_PATH || path.join(__dirname, 'Database', 'Discussion.db');
