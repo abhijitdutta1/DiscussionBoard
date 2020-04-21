@@ -1,3 +1,5 @@
+const uuidV4 = require('uuid').v4;
+
 class UserModel {
     constructor (DAO) {
         this.DAO = DAO
@@ -6,7 +8,8 @@ class UserModel {
     async createTable () {
         const sql = `
             CREATE TABLE IF NOT EXISTS Users (
-            email TEXT PRIMARY KEY,
+            uuid TEXT PRIMARY KEY,
+            email TEXT UNIQUE,
             name TEXT,
             passwordHash TEXT,
             isInstructor VARCHAR(1) DEFAULT '0'
@@ -14,16 +17,19 @@ class UserModel {
         return await this.DAO.run(sql)
     }
 
-
-    async addUser (email, name, passwordHash, isInstructor) {
-        const sql = `INSERT INTO Users (email, name, passwordHash, isInstructor) VALUES (?, ?, ?, ?)`;
-        // Username needs to be unique so this will throw an exception if we 
-        // attempt to add a user that already exists
-        await this.DAO.run(sql, [email, name, passwordHash, isInstructor]);
+    async getUserID (email) {
+        const sql = `SELECT uuid from Users WHERE email=?`;
+        return await this.DAO.get(sql, [email]);
     }
 
-    async getPasswordHash (email) {
-        return await this.DAO.get('SELECT passwordHash FROM Users WHERE email = ?', [email]);
+    async addUser (email, name, passwordHash, isInstructor) {
+        const sql = `INSERT INTO Users VALUES (?, ?, ?, ?, ?)`;
+        const uuid = uuidV4();
+        await this.DAO.run(sql, [uuid, email, name, passwordHash, isInstructor]);
+    }
+
+    async getPasswordHash (email, isInstructor) {
+        return await this.DAO.get('SELECT passwordHash FROM Users WHERE email = ? AND isInstructor = ?', [email, isInstructor]);
     }
 }
 

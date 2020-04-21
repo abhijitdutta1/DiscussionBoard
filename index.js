@@ -4,11 +4,12 @@ const path             = require('path');
 const redis            = require('redis');
 const session          = require('express-session');
 const RedisStore       = require('connect-redis')(session);
-const winston        = require('winston');
+const winston          = require('winston');
 
 const createDAO        = require('./Models/dao');
 const UserModel        = require('./Models/UserModel');
 const AuthController   = require('./Controllers/AuthController');
+const UserController   = require('./Controllers/UserController');
 const ClassModel       = require('./Models/ClassModel');
 const DiscussionModel  = require('./Models/DiscussionModel');
 const RepliesModel     = require('./Models/RepliesModel');
@@ -90,19 +91,101 @@ app.get('/', (req, res, next) => {
 });
 
 /*
+        Student
+*/
+app.get('/sCourse', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        res.sendFile(path.join(__dirname, "public", "html", "sCourse.html"));
+    } else {
+        res.redirect("/");
+    }
+}));
+
+/*
+        Instructor
+*/
+app.get('/iCourse', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        console.log("before send file");
+        // redirect problem
+        res.sendFile(path.join(__dirname, "public", "html", "iCourse.html"));
+        console.log("after send file");
+    } else {
+        res.redirect("/");
+    }
+}));
+
+/*
         Login
 */
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/login.html'));
-});
+app.get('/', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        res.redirect("/sCourse");
+    } else if (req.session.isVerified && req.session.isInstructor === 2) {
+        res.redirect("/iCourse");
+    } else {
+        res.sendFile(path.join(__dirname, "public", "html", "login.html"));
+    }
+}));
+
+app.post("/login", errorHandler( async (req, res) => {
+    if (req.body === undefined || (!req.body.email || !req.body.password)) {
+        return res.sendStatus(400);
+    }
+
+    const {email, password, isInstructor} = req.body;
+    const isVerified = await Auth.login(email, password, isInstructor);
+    const status = isVerified ? 303 : 401;
+    req.session.isVerified = isVerified;
+
+    // TODO: Set the user's ID on their session object
+    if (isVerified) {
+        req.session.email = email;
+        req.session.isInstructor = parseInt(isInstructor);
+        req.session.uuid = await Users.getUserID(email);
+    }
+
+    // redirect a user to corresponding page
+    if(isVerified && isInstructor === "1"){
+        res.redirect('/sCourse');
+    } else if(isVerified && isInstructor === "2"){
+        console.log("before redirect i");
+        res.redirect('/iCourse');
+        console.log("after redirect i");
+    } else {
+        res.sendStatus(status);
+    }
+}));
 
 /*
         Signup
 */
-app.get('/signup', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/html/signup.html'));
-});
+app.get('/signup', errorHandler(async (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "html", "signup.html"));
+}));
 
+app.post("/signup", errorHandler(async (req, res) => {
+    const body = req.body;
+
+    if (body === undefined || (!body.email || !body.password)) {
+        return res.sendStatus(400);
+    }
+
+    const {email, fullName, password, isInstructor} = body;
+
+    try {
+        await Auth.register(email, fullName, password, isInstructor);
+        res.sendStatus(200);
+    } catch (err) {
+        if (err.code === 'SQLITE_CONSTRAINT') {
+            console.error(err);
+            logger.error(err);
+            res.sendStatus(409); // 409 Conflict
+        } else {
+            throw err;
+        }
+    }
+}));
 
 /*
         Error Pages

@@ -6,9 +6,9 @@ class AuthController {
         this.UserModel = new UserModel(dao);
     }
 
-    async register (username, password) {
+    async register (email, name, password, isInstructor) {
         const passwordHash = await this.hashPassword(password);
-        await this.UserModel.addUser(username, passwordHash);
+        await this.UserModel.addUser(email, name, passwordHash, isInstructor);
     }
 
     async hashPassword (password) {
@@ -19,11 +19,12 @@ class AuthController {
             timeCost: 3,         // Takes ~220ms on our machines
             parallelism: 1,      // We have 1 core machines so we can't parallelize any more
         })
+
         return hash;
     }
 
-    async login (username, password) {
-        const result = await this.UserModel.getPasswordHash(username);
+    async login (email, password, isInstructor) {
+        const result = await this.UserModel.getPasswordHash(email, isInstructor);
         // getPasswordHash() returns undefined if the username does not exist
         if (result === undefined) {
             return false;
@@ -33,7 +34,7 @@ class AuthController {
     }
 
     async verifyPassword (passwordHash, password) {
-        return await argon2.verify(passwordHash['passwordHash'], password);
+        return await argon2.verify(passwordHash, password);
     }
 }
 
