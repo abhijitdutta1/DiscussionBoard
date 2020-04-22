@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../css/mainPage.css">
 </head>
 <body>
-    <script src="../js/logout.js"></script>
+    <script src="../js/sCourse.js"></script>
     <nav class="navbar navbar-light bg-light">
         <span class="navbar-brand mb-0 h1 big-text">Course Selection</span>
         <div class="dropdown">
@@ -33,16 +33,16 @@
             </div>
 
             <div class="col p-5">
-                <form method="POST" action="" id="courseCreationForm">
+                <form method="POST" id="course-register-form">
                     <div class="form-row">
                         <div class="form-group col">
-                            <input type="text" class="form-control" placeholder="Code">
+                            <input type="text" class="form-control" placeholder="Code" id="code" required>
                         </div>
                     </div>
             
                     <br>
                     <div class="form-row">
-                        <button type="button" class="btn btn-danger">Register</button>
+                        <button type="submit" class="btn btn-danger">Register</button>
                     </div>
                 </form>
             </div>

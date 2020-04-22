@@ -4,9 +4,7 @@ document.querySelector('body').onload = main;
 
 function main () {
     document.getElementById('logout').onclick = (event) => {
-        event.preventDefault();
         logout();
-        return false;
     }
 }
 

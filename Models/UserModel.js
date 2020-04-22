@@ -8,13 +8,13 @@ class UserModel {
     async createTable () {
         const sql = `
             CREATE TABLE IF NOT EXISTS Users (
-            uuid TEXT PRIMARY KEY,
-            email TEXT UNIQUE,
+            uuid TEXT UNIQUE,
+            email TEXT PRIMARY KEY,
             name TEXT,
             passwordHash TEXT,
             isInstructor VARCHAR(1) DEFAULT '0'
         )`
-        return await this.DAO.run(sql)
+        return await this.DAO.run(sql);
     }
 
     async getUserID (email) {

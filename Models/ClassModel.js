@@ -6,26 +6,27 @@ class ClassModel {
     async createTable () {
         const sql = `
             CREATE TABLE IF NOT EXISTS Class (
-            ClassID TEXT PRIMARY KEY,
+            classID TEXT PRIMARY KEY,
             name TEXT,
-            owner TEXT
-            FOREIGN KEY (email)
-            REFERANCES Users (email)
+            email TEXT REFERENCES Users (email)
             ON DELETE CASCADE
         )`
-        return await this.DAO.run(sql)
+        return await this.DAO.run(sql);
     }
 
-
-    async addClass (ClassID, name) {
-        const sql = `INSERT INTO Class (ClassID, name) VALUES (?, ?)`;
-        // ClassID needs to be unique so this will throw an exception if we 
+    async addClass (classID, name) {
+        const sql = `INSERT INTO Class (classID, name, email) VALUES (?, ?, ?)`;
+        // classID needs to be unique so this will throw an exception if we 
         // attempt to add a class that already exists
-        await this.DAO.run(sql, [ClassID, name]);
+        await this.DAO.run(sql, [classID, name, email]);
     }
 
-    async SearchClass (name) {
-        return await this.DAO.get('SELECT * FROM Class WHERE name = ?', [name]);
+    async searchClassByID (classID) {
+        return await this.DAO.get('SELECT * FROM Class WHERE classID = ?', [classID]);
+    }
+
+    async searchClassByEmail (email) {
+        return await this.DAO.get('SELECT * FROM Class WHERE email = ?', [email]);
     }
 }
 

@@ -92,9 +92,22 @@ app.get('/', (req, res, next) => {
 */
 app.get('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
-        res.sendFile(path.join(__dirname, "public", "html", "sCourse.html"));
+        res.sendFile(path.join(__dirname, 'public', 'html', 'sCourse.html'));
     } else {
-        res.redirect("/");
+        res.redirect('/');
+    }
+}));
+
+app.post('/sCourse', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        // access class db with code
+        // get the class with code
+        // return the class in json
+        const course = await Classes.searchClassByID(req.body.code);
+        console.log(course);
+        res.sendStatus(200);
+    } else {
+        res.redirect('/');
     }
 }));
 
@@ -103,9 +116,9 @@ app.get('/sCourse', errorHandler(async (req, res) => {
 */
 app.get('/iCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
-        res.sendFile(path.join(__dirname, "public", "html", "iCourse.html"));
+        res.sendFile(path.join(__dirname, 'public', 'html', 'iCourse.html'));
     } else {
-        res.redirect("/");
+        res.redirect('/');
     }
 }));
 
@@ -114,15 +127,15 @@ app.get('/iCourse', errorHandler(async (req, res) => {
 */
 app.get('/', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
-        res.redirect("/sCourse");
+        res.redirect('/sCourse');
     } else if (req.session.isVerified && req.session.isInstructor === 2) {
-        res.redirect("/iCourse");
+        res.redirect('/iCourse');
     } else {
-        res.sendFile(path.join(__dirname, "public", "html", "login.html"));
+        res.sendFile(path.join(__dirname, 'public', 'html', 'login.html'));
     }
 }));
 
-app.post("/login", errorHandler( async (req, res) => {
+app.post('/login', errorHandler( async (req, res) => {
     if (req.body === undefined || (!req.body.email || !req.body.password)) {
         return res.sendStatus(400);
     }
@@ -153,10 +166,10 @@ app.post("/login", errorHandler( async (req, res) => {
         Signup
 */
 app.get('/signup', errorHandler(async (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "html", "signup.html"));
+    res.sendFile(path.join(__dirname, 'public', 'html', 'signup.html'));
 }));
 
-app.post("/signup", errorHandler(async (req, res) => {
+app.post('/signup', errorHandler(async (req, res) => {
     const body = req.body;
 
     if (body === undefined || (!body.email || !body.password)) {
@@ -182,7 +195,7 @@ app.post("/signup", errorHandler(async (req, res) => {
 /*
         logout
 */
-app.post("/logout", (req, res) => {
+app.post('/logout', (req, res) => {
     req.session.isVerified = false;
     res.sendStatus(200);
 })
@@ -204,13 +217,15 @@ app.listen(80, async () => {
     // wait until the db is initialized and all models are initialized
     await initDB();
     // Then log that the we're listening on port 80
-    console.log("Listening on port 80.");
+    console.log('Listening on port 80.');
 });
 
 async function initDB () {
     const dao = await createDAO(dbFilePath);
     Users = new UserModel(dao);
     await Users.createTable();
+    Classes = new ClassModel(dao);
+    await Classes.createTable();
     Auth = new AuthController(dao);
 }
 
