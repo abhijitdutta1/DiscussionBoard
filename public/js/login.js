@@ -23,6 +23,13 @@ async function sendPass () {
     if (res.status === 303) {
         console.log(res);
         alert('Login successful');
+
+        // redirect user
+        if(isInstructor === "1") {
+            window.location = '/sCourse';
+        } else if (isInstructor === "2") {
+            window.location = '/iCourse';
+        }
     } else if (res.status === 401) {
         alert('Incorrect username/password/title');
     } else {

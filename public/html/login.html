@@ -32,11 +32,11 @@
                 <form method="POST" id="login-form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <input type="email" class="form-control" id="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" placeholder="Email" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <input type="password" class="form-control"  id="password" placeholder="Password">
+                            <input type="password" class="form-control"  id="password" placeholder="Password" required>
                         </div>
                     </div>
 
@@ -45,8 +45,7 @@
                         <div class="form-group col-md-6">
                             <label class="mr-sm-2" for="title">Title</label>
 
-                            <select class="custom-select mr-sm-2" id="title">
-                                <option selected>Choose...</option>
+                            <select class="custom-select mr-sm-2" id="title" required>
                                 <option value="1">Student</option>
                                 <option value="2">Instructor</option>
                             </select>

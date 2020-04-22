@@ -32,21 +32,21 @@
                 <form method="POST" id="register-form">
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <input id="full-name" name="Full Name" placeholder="Full Name" class="form-control" type="text">
+                            <input id="full-name" name="Full Name" placeholder="Full Name" class="form-control" type="text" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <input type="email" class="form-control" id="email" placeholder="Email">
+                            <input type="email" class="form-control" id="email" placeholder="Email" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            <input type="password" class="form-control"  placeholder="Password" id="password">
+                            <input type="password" class="form-control"  placeholder="Password" id="password" required>
                         </div>
 
                         <div class="form-group col-md-6">
-                            <input type="password" class="form-control"  placeholder="Confirm" id="confirm-password">
+                            <input type="password" class="form-control"  placeholder="Confirm" id="confirm-password" required>
                         </div>
                     </div>
 
@@ -55,8 +55,7 @@
                         <div class="form-group col-md-6">
                             <label class="mr-sm-2" for="inlineFormCustomSelect">Title</label>
 
-                            <select class="custom-select mr-sm-2" id="title">
-                                <option selected>Choose...</option>
+                            <select class="custom-select mr-sm-2" id="title" required>
                                 <option value="1">Student</option>
                                 <option value="2">Instructor</option>
                             </select>

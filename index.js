@@ -44,7 +44,6 @@ app.use(sess);
 /*
         Initialize logger
 */
-// Initialize logger
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
@@ -77,8 +76,6 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const PORT = 80;
-
 app.get('/', (req, res, next) => {
     if (!req.session.name) {
         req.session.name  = req.query.name;
@@ -106,10 +103,7 @@ app.get('/sCourse', errorHandler(async (req, res) => {
 */
 app.get('/iCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
-        console.log("before send file");
-        // redirect problem
         res.sendFile(path.join(__dirname, "public", "html", "iCourse.html"));
-        console.log("after send file");
     } else {
         res.redirect("/");
     }
@@ -145,16 +139,14 @@ app.post("/login", errorHandler( async (req, res) => {
         req.session.uuid = await Users.getUserID(email);
     }
 
-    // redirect a user to corresponding page
-    if(isVerified && isInstructor === "1"){
-        res.redirect('/sCourse');
-    } else if(isVerified && isInstructor === "2"){
-        console.log("before redirect i");
-        res.redirect('/iCourse');
-        console.log("after redirect i");
-    } else {
-        res.sendStatus(status);
-    }
+    // // redirect a user to corresponding page
+    // if(isVerified && isInstructor === "1"){
+    //     return res.redirect('/sCourse');
+    // } else if(isVerified && isInstructor === "2"){
+    //     return res.redirect('/iCourse');
+    // } 
+    
+    res.sendStatus(status);
 }));
 
 /*
@@ -188,10 +180,19 @@ app.post("/signup", errorHandler(async (req, res) => {
 }));
 
 /*
+        logout
+*/
+app.post("/logout", (req, res) => {
+    req.session.isVerified = false;
+    res.sendStatus(200);
+})
+
+/*
         Error Pages
 */
 // This sends back the error page
 app.get('/error', (req, res) => res.sendFile(path.join(__dirname, 'public', 'html', 'error.html')));
+
 // which hits this route to get a random error gif
 app.get('/error_background', (req, res) => {
     const gifNum = Math.floor(Math.random() * 10) + 1;
