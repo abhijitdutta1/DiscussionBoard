@@ -28,6 +28,7 @@ async function registerCourse() {
     });
     if (res.status === 200) {
         console.log(res);
+        render();
         alert('Registered class successfully');
     } else if (res.status === 404) {
         alert('Class was not found with the code');
