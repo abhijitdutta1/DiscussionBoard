@@ -105,6 +105,8 @@ app.get('/registeredCourses', errorHandler(async (req, res) => {
 
 app.get('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
+        // await Classes.addClass("1111", "CS1111", "CS1111", "teacher1@gmail.com");
+        // await Classes.addClass("2222", "CS2222", "CS2222", "teacher2@gmail.com");
         res.sendFile(path.join(__dirname, 'public', 'html', 'sCourse.html'));
     } else {
         res.redirect('/');
@@ -114,8 +116,6 @@ app.get('/sCourse', errorHandler(async (req, res) => {
 app.post('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
         // search class
-        // await Classes.addClass("1111", "CS1111", "CS1111", "teacher1@gmail.com");
-        // await Classes.addClass("2222", "CS2222", "CS2222", "teacher2@gmail.com");
         const course = await Classes.searchClassByID(req.body.code);
         if(course) {
             // register class

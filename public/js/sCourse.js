@@ -19,7 +19,6 @@ function main () {
 
 async function registerCourse() {
     const code = document.getElementById('code').value;
-    console.log(`code`);
 
     const res = await fetch('http://52.179.6.145/sCourse', {
         method: 'post',
@@ -28,7 +27,7 @@ async function registerCourse() {
     });
     if (res.status === 200) {
         console.log(res);
-        render();
+        getRegisteredClasses();
         alert('Registered class successfully');
     } else if (res.status === 404) {
         alert('Class was not found with the code');
