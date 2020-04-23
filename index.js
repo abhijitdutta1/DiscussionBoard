@@ -1,19 +1,20 @@
-const express          = require('express');
-const app              = express();
-const path             = require('path');
-const redis            = require('redis');
-const session          = require('express-session');
-const RedisStore       = require('connect-redis')(session);
-const winston          = require('winston');
+const express            = require('express');
+const app                = express();
+const path               = require('path');
+const redis              = require('redis');
+const session            = require('express-session');
+const RedisStore         = require('connect-redis')(session);
+const winston            = require('winston');
 
-const createDAO        = require('./Models/dao');
-const UserModel        = require('./Models/UserModel');
-const AuthController   = require('./Controllers/AuthController');
-const UserController   = require('./Controllers/UserController');
-const ClassModel       = require('./Models/ClassModel');
-const DiscussionModel  = require('./Models/DiscussionModel');
-const RepliesModel     = require('./Models/RepliesModel');
-const Reply2replyModel = require('./Models/Reply2ReplyModel');
+const createDAO          = require('./Models/dao');
+const UserModel          = require('./Models/UserModel');
+const AuthController     = require('./Controllers/AuthController');
+const UserController     = require('./Controllers/UserController');
+const ClassModel         = require('./Models/ClassModel');
+const Student2ClassModel = require('./Models/Student2ClassModel');
+const DiscussionModel    = require('./Models/DiscussionModel');
+const RepliesModel       = require('./Models/RepliesModel');
+const Reply2replyModel   = require('./Models/Reply2ReplyModel');
 
 const redisClient = redis.createClient();
 
@@ -90,6 +91,18 @@ app.get('/', (req, res, next) => {
 /*
         Student
 */
+
+// retrieve registered classes for a particular student
+app.get('/registeredCourses', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        // retrieve class with student email
+        const rows = await Student2Class.searchClassByStudent(req.session.email);     
+        res.send(JSON.stringify({classes: rows}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
 app.get('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
         res.sendFile(path.join(__dirname, 'public', 'html', 'sCourse.html'));
@@ -100,12 +113,27 @@ app.get('/sCourse', errorHandler(async (req, res) => {
 
 app.post('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
-        // access class db with code
-        // get the class with code
-        // return the class in json
+        // search class
+        // await Classes.addClass("1111", "CS1111", "CS1111", "teacher1@gmail.com");
+        // await Classes.addClass("2222", "CS2222", "CS2222", "teacher2@gmail.com");
         const course = await Classes.searchClassByID(req.body.code);
-        console.log(course);
-        res.sendStatus(200);
+        if(course) {
+            // register class
+            try {
+                await Student2Class.registerStudent(course["classID"], req.session.email);
+                return res.sendStatus(200);
+            } catch (err) { // student is already registered with the class
+                if (err.code === 'SQLITE_CONSTRAINT') {
+                    console.error(err);
+                    logger.error(err);
+                    return res.sendStatus(409); // 409 Conflict
+                } else {
+                    throw err;
+                }
+            }
+        } else { // class not found
+            return res.sendStatus(404);
+        }
     } else {
         res.redirect('/');
     }
@@ -226,6 +254,8 @@ async function initDB () {
     await Users.createTable();
     Classes = new ClassModel(dao);
     await Classes.createTable();
+    Student2Class = new Student2ClassModel(dao);
+    await Student2Class.createTable();
     Auth = new AuthController(dao);
 }
 

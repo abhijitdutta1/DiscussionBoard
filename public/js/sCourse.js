@@ -1,8 +1,11 @@
 'use strict';
 
 document.querySelector('body').onload = main;
+let local_items = [];
 
 function main () {
+    getRegisteredClasses();
+    
     document.getElementById('course-register-form').onsubmit = (event) => {
         event.preventDefault();
         registerCourse();
@@ -25,11 +28,38 @@ async function registerCourse() {
     });
     if (res.status === 200) {
         console.log(res);
-        alert('Register class successful');
-    } else if (res.status === 401) {
+        alert('Registered class successfully');
+    } else if (res.status === 404) {
         alert('Class was not found with the code');
-    } else {
+    } else if (res.status === 409) {
+        alert('Student is already registered for this course');
+    } 
+    else {
         window.location = '/error';
+    }
+}
+
+function getRegisteredClasses () {
+    fetch('http://52.179.6.145/registeredCourses', {
+        method: 'GET'
+    }).then( res => {
+        return res.json();
+    }).then( data => {
+        local_items = data.classes;
+        render();
+    }).catch( err => {
+        console.log(err);
+    });
+}
+
+function render() {
+    const template = document.getElementById('template');
+    let list_elt = document.getElementById('class-list');
+    list_elt.innerHTML = '';
+    for (let i = 0; i < local_items.length; ++i) {
+        let new_li = document.importNode(template.content, true);
+        new_li.querySelector('.list-group-item').textContent = local_items[i].name;
+        list_elt.appendChild(new_li);
     }
 }
 
