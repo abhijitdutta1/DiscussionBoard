@@ -13,6 +13,7 @@
 </head>
 <body>
     <script src="../js/logout.js"></script>
+    <script src="../js/iCourse.js"></script>
     <nav class="navbar navbar-light bg-light">
         <span class="navbar-brand mb-0 h1 big-text">Course Selection</span>
         <div class="dropdown">
@@ -25,24 +26,25 @@
 
     <div class="container">
         <div class="row">
-            <div class="col p-5">
-                <a href="#" class="list-group-item list-group-item-action">CS1111</a>
-                <a href="#" class="list-group-item list-group-item-action">CS2222</a>
-                <a href="#" class="list-group-item list-group-item-action">CS3333</a>
-                <a href="#" class="list-group-item list-group-item-action">CS4444</a>
+            <div class="col p-5 class-list" id="class-list">
+        
             </div>
+
+            <template id="template">
+                <a href="http://40.84.158.14/iCourse/iDiscussion" class="list-group-item list-group-item-action"></a>
+            </template>
             
             <div class="col p-5">
-                <form method="POST" action="" id="courseCreationForm">
+                <form method="POST" id="courseCreationForm">
                     <div class="form-row">
                         <div class="form-group col">
-                            <input type="text" class="form-control" placeholder="Course Name">
+                            <input type="text" class="form-control" placeholder="Course Name" id="name" required>
                         </div>
                     </div>
             
                     <div class="form-row">
                         <div class="form-group col">
-                            <input type="text" class="form-control" placeholder="Code">
+                            <input type="text" class="form-control" placeholder="Class Code" id="classID" required>
                         </div>
                     </div>
             
@@ -50,13 +52,13 @@
                     <div class="form-row">
                         <div class="form-group col">
                             <label class="mr-sm-2" for="description">Description:</label>
-                            <textarea class="form-control" id="description" form="courseCreationForm" rows="5"></textarea>
+                            <textarea class="form-control" id="description" form="courseCreationForm" rows="5"></textarea required>
                         </div>
                     </div>
                     <br>
             
                     <div class="form-row">
-                        <button type="button" class="btn btn-danger">Create</button>
+                        <button type="submit" class="btn btn-danger">Create</button>
                     </div>
                 </form>
             </div>

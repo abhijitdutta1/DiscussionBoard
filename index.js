@@ -150,6 +150,88 @@ app.get('/iCourse', errorHandler(async (req, res) => {
     }
 }));
 
+app.post('/iCourse', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        const body = req.body;
+
+        console.log(body);
+        console.log(body.classID);
+        console.log(body.name);
+        console.log(body.description);
+
+        if (body === undefined || (!body.classID || !body.name || !body.description)) {
+            return res.sendStatus(400);
+        }
+
+        const {classID, name, description} = body;
+        const email = req.session.email;
+
+        try {
+            await Classes.addClass(classID, name, description, email);
+            res.sendStatus(200);
+        } catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/iCourse-list', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        // retrieve class with instructor email
+        const rows = await Classes.searchClassByEmail(req.session.email);     
+        res.send(JSON.stringify({classes: rows}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/iCourse/iDiscussion', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'iDiscussion.html'));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.post('/iCourse/iDiscussion', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        const body = req.body;
+
+        console.log(body);
+        console.log(body.question);
+        console.log(body.datetimepicker1);
+        console.log(body.description);
+
+        if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
+            return res.sendStatus(400);
+        }
+
+        const {question, datetimepicker1, description} = body;
+        const classID =""; //TODO 
+
+        try {
+            await Diss.addDiscussion(classID, question, datetimepicker1, description);
+            res.sendStatus(200);
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
 /*
         Login
 */
@@ -254,6 +336,8 @@ async function initDB () {
     await Users.createTable();
     Classes = new ClassModel(dao);
     await Classes.createTable();
+    Diss = new DiscussionModel(dao);
+    await Diss.createTable();
     Student2Class = new Student2ClassModel(dao);
     await Student2Class.createTable();
     Auth = new AuthController(dao);

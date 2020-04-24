@@ -6,24 +6,22 @@ class DiscussionModel {
     async createTable () {
         const sql = `
             CREATE TABLE IF NOT EXISTS Discussion (
-            ClassID TEXT 
-            FOREIGN KEY (ClassID)
-            REFERANCES Class (ClassID)
+            ClassID TEXT REFERENCES Class (classID)
             ON DELETE CASCADE,
             QID INTEGER PRIMARY KEY AUTOINCREMENT,
             question TEXT,
+            description TEXT,
             endDate DATE,
-            endTime TEXT,
-            
+            endTime TEXT
         )`
         return await this.DAO.run(sql)
     }
 
 
-    async addDiscussion (question, endDate, endTime) {
-        const sql = `INSERT INTO Discussion (question, endDate, endTime) VALUES (?, ?, ?)`;
+    async addDiscussion (classID, question, description, endDate, endTime) {
+        const sql = `INSERT INTO Discussion (classID, question, description, endDate, endTime) VALUES (?, ?, ?, ?, ?)`;
      
-        await this.DAO.run(sql, [question, endDate, endTime]);
+        await this.DAO.run(sql, [classID, question, description, endDate, endTime]);
     }
 
     async SearchQuestion (ClassID) {
