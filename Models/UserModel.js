@@ -22,6 +22,11 @@ class UserModel {
         return await this.DAO.get(sql, [email]);
     }
 
+    async getName (email) {
+        const sql = `SELECT name from Users WHERE email=?`;
+        return await this.DAO.get(sql, [email]);
+    }
+
     async addUser (email, name, passwordHash, isInstructor) {
         const sql = `INSERT INTO Users VALUES (?, ?, ?, ?, ?)`;
         const uuid = uuidV4();

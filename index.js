@@ -77,27 +77,21 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get('/', (req, res, next) => {
-    if (!req.session.name) {
-        req.session.name  = req.query.name;
-    }
-    // req.session.views = req.session.views ? req.session.views+1 : 1;
-
-    // console.log(`current views:`);
-    // console.log(req.session);
-    next();
-});
+// app.get('/', (req, res, next) => {
+//     if (!req.session.name) {
+//         req.session.name  = req.query.name;
+//     }
+//     next();
+// });
 
 /*
         Student
 */
-
-// retrieve registered classes for a particular student
 app.get('/registeredCourses', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
         // retrieve class with student email
         const rows = await Student2Class.searchClassByStudent(req.session.email);     
-        res.send(JSON.stringify({classes: rows}));
+        res.send(JSON.stringify({classes: rows, username: req.session.name.name}));
     } else {
         res.redirect('/');
     }
@@ -105,8 +99,6 @@ app.get('/registeredCourses', errorHandler(async (req, res) => {
 
 app.get('/sCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
-        // await Classes.addClass("1111", "CS1111", "CS1111", "teacher1@gmail.com");
-        // await Classes.addClass("2222", "CS2222", "CS2222", "teacher2@gmail.com");
         res.sendFile(path.join(__dirname, 'public', 'html', 'sCourse.html'));
     } else {
         res.redirect('/');
@@ -134,6 +126,26 @@ app.post('/sCourse', errorHandler(async (req, res) => {
         } else { // class not found
             return res.sendStatus(404);
         }
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/sDiscussion-list/:classID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        // retrieve discussion with class 
+        rows = await Diss.SearchQuestion(req.params.classID);
+        // retrieve class
+        row = await Classes.searchClassByID(req.params.classID);
+        res.send(JSON.stringify({discussions: rows, course: row.name}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/sCourse/:classID/sDiscussion', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'sDiscussion.html'));
     } else {
         res.redirect('/');
     }
@@ -186,7 +198,7 @@ app.get('/iCourse-list', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
         // retrieve class with instructor email
         const rows = await Classes.searchClassByEmail(req.session.email);     
-        res.send(JSON.stringify({classes: rows}));
+        res.send(JSON.stringify({classes: rows, username: req.session.name.name}));
     } else {
         res.redirect('/');
     }
@@ -258,16 +270,10 @@ app.post('/login', errorHandler( async (req, res) => {
     // TODO: Set the user's ID on their session object
     if (isVerified) {
         req.session.email = email;
+        req.session.name = await Users.getName(email);
         req.session.isInstructor = parseInt(isInstructor);
         req.session.uuid = await Users.getUserID(email);
     }
-
-    // // redirect a user to corresponding page
-    // if(isVerified && isInstructor === "1"){
-    //     return res.redirect('/sCourse');
-    // } else if(isVerified && isInstructor === "2"){
-    //     return res.redirect('/iCourse');
-    // } 
     
     res.sendStatus(status);
 }));

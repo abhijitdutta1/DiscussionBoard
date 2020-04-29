@@ -30,7 +30,7 @@ async function subjectForm () {
 
     const data = {question, datetimepicker1, description};
     console.log(`client: ${data}`);
-    const res = await fetch('http://40.84.158.14/iCourse/iDiscussion', {
+    const res = await fetch('http://52.179.6.145/iCourse/iDiscussion', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
@@ -48,7 +48,7 @@ async function subjectForm () {
 
 
 function getClassList () {
-    fetch('http://40.84.158.14/iDiscussion-list', {
+    fetch('http://52.179.6.145/iDiscussion-list', {
         method: 'GET'
     }).then( res => {
         return res.json();
@@ -72,7 +72,7 @@ function render() {
 }
 
 async function logout () {
-    const res = await fetch('http://40.84.158.14/logout', {
+    const res = await fetch('http://52.179.6.145/logout', {
         method: 'post',
     });
     if (res.status === 200) {

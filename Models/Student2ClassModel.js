@@ -21,7 +21,7 @@ class Student2ClassModel {
     }
 
     async searchClassByStudent (email) {
-        return await this.DAO.all('SELECT c.name FROM Student2Class sc, Class c WHERE student = ? AND sc.classID = c.classID', [email]);
+        return await this.DAO.all('SELECT c.name, c.classID FROM Student2Class sc, Class c WHERE student = ? AND sc.classID = c.classID', [email]);
     }
 }
 

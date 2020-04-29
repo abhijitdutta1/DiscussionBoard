@@ -25,7 +25,7 @@ class DiscussionModel {
     }
 
     async SearchQuestion (ClassID) {
-        return await this.DAO.get('SELECT question FROM Discussion WHERE ClassID = ?', [ClassID]);
+        return await this.DAO.all('SELECT question FROM Discussion WHERE ClassID = ?', [ClassID]);
     }
 
 }
