@@ -62,12 +62,17 @@ function getClassList () {
 }
 
 function render() {
+    let classID = window.location.href.split('/')[4]
     const template = document.getElementById('template');
     let list_elt = document.getElementById('d-list');
     list_elt.innerHTML = '';
+
     for (let i = 0; i < local_items.length; ++i) {
         let new_li = document.importNode(template.content, true);
-        new_li.querySelector('.list-group-item').textContent = local_items[i].name;
+
+        // get question and discussion ID
+        new_li.querySelector('.list-group-item').textContent = local_items[i].question;
+        new_li.querySelector('.list-group-item').setAttribute('href', `iCourse/${classID}/iDiscussion/${local_items[i].QID}`);
         list_elt.appendChild(new_li);
     }
 }

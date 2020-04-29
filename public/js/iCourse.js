@@ -66,8 +66,11 @@ function render() {
     const template = document.getElementById('template');
     let list_elt = document.getElementById('class-list');
     list_elt.innerHTML = '';
+
     for (let i = 0; i < local_items.length; ++i) {
         let new_li = document.importNode(template.content, true);
+
+        // get course and course ID
         new_li.querySelector('.list-group-item').textContent = local_items[i].name;
         new_li.querySelector('.list-group-item').setAttribute('href', `iCourse/${local_items[i].classID}/iDiscussion`);
         list_elt.appendChild(new_li);
