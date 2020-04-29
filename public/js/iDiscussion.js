@@ -11,42 +11,39 @@ function main () {
 
     getClassList();
 
-    // document.getElementById('discussionCreationForm').onsubmit = (event) => {
-    //     event.preventDefault();
-    //     subjectForm();
-    //     return false;
-    // }
+    document.getElementById('discussionCreationForm').onsubmit = (event) => {
+        event.preventDefault();
+        subjectForm();
+        return false;
+    }
 
     document.getElementById('logout').onclick = (event) => {
         logout();
     }
 }
 
-// async function subjectForm () { 
-//     const question = document.getElementById('question').value;
-//     const datetimepicker1 = document.getElementById('datetimepicker1').value;
-//     const description = document.getElementById('description').value; 
-//     console.log(question, datetimepicker1, description);
+async function subjectForm () { 
+    const question = document.getElementById('question').value;
+    const datetimepicker1 = document.getElementById('datetime').value;
+    const description = document.getElementById('description').value; 
 
-//     const data = {question, datetimepicker1, description};
-//     console.log(`client: ${data}`);
-//     // modify this part so that we can pass classID refer to sDiscussion.js
-//     const res = await fetch('http://52.179.6.145/iCourse/iDiscussion', {
-//         method: 'post',
-//         body: JSON.stringify(data),
-//         headers: {'Content-Type': 'application/json'}
-//     });
+    const data = {question, datetimepicker1, description};
+   
+    const res = await fetch(window.location.href, {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {'Content-Type': 'application/json'}
+    });
 
-//     if (res.status === 200) {
-//         alert('Discussion Created');
-//         getClassList();
-//     } else if (res.status === 409) {
-//         alert('Discussion exists');
-//     } else {
-//         window.location = '/error';
-//     } 
-// }
-
+    if (res.status === 200) {
+        alert('Discussion Created');
+        getClassList();
+    } else if (res.status === 409) {
+        alert('Discussion exists');
+    } else {
+        window.location = '/error';
+    } 
+}
 
 function getClassList () {
     let classID = window.location.href.split('/')[4]

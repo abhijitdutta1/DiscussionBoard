@@ -166,11 +166,6 @@ app.post('/iCourse', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
         const body = req.body;
 
-        console.log(body);
-        console.log(body.classID);
-        console.log(body.name);
-        console.log(body.description);
-
         if (body === undefined || (!body.classID || !body.name || !body.description)) {
             return res.sendStatus(400);
         }
@@ -181,7 +176,7 @@ app.post('/iCourse', errorHandler(async (req, res) => {
         try {
             await Classes.addClass(classID, name, description, email);
             res.sendStatus(200);
-        } catch (err) {
+        } catch (err) { // class already exists
             if (err.code === 'SQLITE_CONSTRAINT') {
                 console.error(err);
                 res.sendStatus(409); // 409 Conflict
@@ -232,25 +227,26 @@ app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
         console.log(body.question);
         console.log(body.datetimepicker1);
         console.log(body.description);
+        res.sendStatus(200);
 
-        if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
-            return res.sendStatus(400);
-        }
+        // if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
+        //     return res.sendStatus(400);
+        // }
 
-        const {question, datetimepicker1, description} = body;
-        const classID =""; //TODO 
+        // const {question, datetimepicker1, description} = body;
+        // const classID =""; //TODO 
 
-        try {
-            await Diss.addDiscussion(classID, question, datetimepicker1, description);
-            res.sendStatus(200);
-        }catch (err) {
-            if (err.code === 'SQLITE_CONSTRAINT') {
-                console.error(err);
-                res.sendStatus(409); // 409 Conflict
-            } else {
-                throw err;
-            }
-        }
+        // try {
+        //     await Diss.addDiscussion(classID, question, datetimepicker1, description);
+        //     res.sendStatus(200);
+        // }catch (err) {
+        //     if (err.code === 'SQLITE_CONSTRAINT') {
+        //         console.error(err);
+        //         res.sendStatus(409); // 409 Conflict
+        //     } else {
+        //         throw err;
+        //     }
+        // }
     } else {
         res.redirect('/');
     }

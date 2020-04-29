@@ -17,7 +17,6 @@ class DiscussionModel {
         return await this.DAO.run(sql)
     }
 
-
     async addDiscussion (classID, question, description, endDate, endTime) {
         const sql = `INSERT INTO Discussion (classID, question, description, endDate, endTime) VALUES (?, ?, ?, ?, ?)`;
      
