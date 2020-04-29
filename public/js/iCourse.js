@@ -69,6 +69,7 @@ function render() {
     for (let i = 0; i < local_items.length; ++i) {
         let new_li = document.importNode(template.content, true);
         new_li.querySelector('.list-group-item').textContent = local_items[i].name;
+        new_li.querySelector('.list-group-item').setAttribute('href', `iCourse/${local_items[i].classID}/iDiscussion`);
         list_elt.appendChild(new_li);
     }
 }

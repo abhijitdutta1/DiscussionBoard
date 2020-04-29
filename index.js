@@ -133,7 +133,7 @@ app.post('/sCourse', errorHandler(async (req, res) => {
 
 app.get('/sDiscussion-list/:classID', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 1) {
-        // retrieve discussion with class 
+        // retrieve discussions with class 
         rows = await Diss.SearchQuestion(req.params.classID);
         // retrieve class
         row = await Classes.searchClassByID(req.params.classID);
@@ -204,7 +204,19 @@ app.get('/iCourse-list', errorHandler(async (req, res) => {
     }
 }));
 
-app.get('/iCourse/iDiscussion', errorHandler(async (req, res) => {
+app.get('/iDiscussion-list/:classID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        // retrieve discussions with class
+        rows = await Diss.SearchQuestion(req.params.classID); 
+        // retrieve class   
+        row = await Classes.searchClassByID(req.params.classID);
+        res.send(JSON.stringify({classes: rows, course: row.name}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
         res.sendFile(path.join(__dirname, 'public', 'html', 'iDiscussion.html'));
     } else {
@@ -212,7 +224,7 @@ app.get('/iCourse/iDiscussion', errorHandler(async (req, res) => {
     }
 }));
 
-app.post('/iCourse/iDiscussion', errorHandler(async (req, res) => {
+app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
         const body = req.body;
 
