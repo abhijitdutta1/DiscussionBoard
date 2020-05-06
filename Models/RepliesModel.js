@@ -11,16 +11,19 @@ class RepliesModel {
             REFERANCES Discussion (QID)
             ON DELETE CASCADE,
             ReplyID INTEGER PRIMARY KEY AUTOINCREMENT,
-            Reply TEXT
+            Reply TEXT,
+            date DATE,
+            time TEXT,
+            user TEXT REFERENCES Users (email)
         )`
         return await this.DAO.run(sql)
     }
 
 
-    async addReply (Reply) {
-        const sql = `INSERT INTO Replies (Reply) VALUES (?)`;
+    async addReply (qid, reply, date, time, user) {
+        const sql = `INSERT INTO Replies (QID, Reply, date, time, user) VALUES (?, ?, ?, ?, ?)`;
         
-        await this.DAO.run(sql, [Reply]);
+        await this.DAO.run(sql, [qid, reply, date, time, user]);
     }
 
     async getReply (QID) {
