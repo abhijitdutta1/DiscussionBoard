@@ -47,14 +47,14 @@ async function subjectForm () {
 
 function getDissList () {
     let classID = window.location.href.split('/')[4]
-    fetch(`http://40.84.158.14/iDiscussion-list/${classID}`, {
+    fetch(`http://52.179.6.145/iDiscussion-list/${classID}`, {
         method: 'GET'
     }).then( res => {
         return res.json();
     }).then( data => {
         local_items = data.discussions;
         // display class name
-        document.getElementById('welcome').textContent = `'${data.course}'` + ` by '${data.username}'`;
+        document.getElementById('welcome').textContent = `${data.course} - ` + `${data.username}`;
         render();
     }).catch( err => {
         console.log(err);
@@ -72,13 +72,13 @@ function render() {
 
         // get question and discussion ID
         new_li.querySelector('.list-group-item').textContent = local_items[i].question;
-        new_li.querySelector('.list-group-item').setAttribute('href', `iCourse/${classID}/iDiscussion/${local_items[i].QID}`);
+        new_li.querySelector('.list-group-item').setAttribute('href', `iDiscussion/${local_items[i].QID}`);
         list_elt.appendChild(new_li);
     }
 }
 
 async function logout () {
-    const res = await fetch('http://40.84.158.14/logout', {
+    const res = await fetch('http://52.179.6.145/logout', {
         method: 'post',
     });
     if (res.status === 200) {

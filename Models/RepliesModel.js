@@ -6,28 +6,24 @@ class RepliesModel {
     async createTable () {
         const sql = `
             CREATE TABLE IF NOT EXISTS Replies (
-            QID INTEGER 
-            FOREIGN KEY (QID)
-            REFERANCES Discussion (QID)
+            QID INTEGER REFERENCES Discussion (QID)
             ON DELETE CASCADE,
             ReplyID INTEGER PRIMARY KEY AUTOINCREMENT,
             Reply TEXT,
-            date DATE,
-            time TEXT,
-            user TEXT REFERENCES Users (email)
+            date TEXT,
+            user TEXT
         )`
         return await this.DAO.run(sql)
     }
 
-
-    async addReply (qid, reply, date, time, user) {
-        const sql = `INSERT INTO Replies (QID, Reply, date, time, user) VALUES (?, ?, ?, ?, ?)`;
+    async addReply (qid, reply, date, user) {
+        const sql = `INSERT INTO Replies (QID, Reply, date, user) VALUES (?, ?, ?, ?)`;
         
-        await this.DAO.run(sql, [qid, reply, date, time, user]);
+        await this.DAO.run(sql, [qid, reply, date, user]);
     }
 
     async getReply (QID) {
-        return await this.DAO.get('SELECT Reply FROM Replies WHERE QID = ?', [QID]);
+        return await this.DAO.all('SELECT * FROM Replies WHERE QID = ?', [QID]);
     }
 
 }

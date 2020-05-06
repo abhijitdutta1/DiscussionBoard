@@ -137,7 +137,7 @@ app.get('/sDiscussion-list/:classID', errorHandler(async (req, res) => {
         rows = await Diss.SearchQuestion(req.params.classID);
         // retrieve class
         row = await Classes.searchClassByID(req.params.classID);
-        res.send(JSON.stringify({discussions: rows, course: row.name}));
+        res.send(JSON.stringify({discussions: rows, course: row.name, username: req.session.name.name,}));
     } else {
         res.redirect('/');
     }
@@ -205,7 +205,6 @@ app.get('/iDiscussion-list/:classID', errorHandler(async (req, res) => {
         rows = await Diss.SearchQuestion(req.params.classID); 
         // retrieve class   
         row = await Classes.searchClassByID(req.params.classID);
-        console.log(rows[0]);
         res.send(JSON.stringify({discussions: rows, topic: row.question, QID: row.QID, username: req.session.name.name, course: row.name}));
     } else {
         res.redirect('/');
@@ -223,12 +222,6 @@ app.get('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
 app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
     if (req.session.isVerified && req.session.isInstructor === 2) {
         const body = req.body;
-
-        console.log(body);
-        console.log(body.question);
-        console.log(body.datetimepicker1);
-        console.log(body.description);
-        console.log(req.params.classID);
 
         if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
             return res.sendStatus(400);
@@ -256,8 +249,57 @@ app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
 /*
         Discussion board
 */
-app.get('/discussion', errorHandler(async (req, res) => {
+
+app.get('/discussion-list/:QID', errorHandler(async (req, res) => {
     if (req.session.isVerified) {
+        // retrieve class with instructor email
+        const rows = await Reply.getReply(req.params.QID);  
+        const row = await Diss.SearchDiscussion(req.params.QID);
+
+        res.send(JSON.stringify({replies: rows, discussion: row, title: req.session.isInstructor}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/sCourse/:classID/sDiscussion/:QID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'discussion.html'));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.post('/sCourse/:classID/sDiscussion/:QID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        const body = req.body;
+
+        if (body === undefined || !body.reply || !body.date) {
+            return res.sendStatus(400);
+        }
+
+        const {reply, date} = body;
+        const qid = req.params.QID;
+        const user = req.session.name.name;
+
+        try {
+            await Reply.addReply(qid, reply, date, user);
+            res.sendStatus(200);
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/iCourse/:classID/iDiscussion/:QID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
         res.sendFile(path.join(__dirname, 'public', 'html', 'discussion.html'));
     } else {
         res.redirect('/');
@@ -366,6 +408,8 @@ async function initDB () {
     await Diss.createTable();
     Student2Class = new Student2ClassModel(dao);
     await Student2Class.createTable();
+    Reply = new RepliesModel(dao);
+    await Reply.createTable();
     Auth = new AuthController(dao);
 }
 

@@ -9,13 +9,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <link rel="stylesheet" href="../css/mainPage.css">
+    <link rel="stylesheet" href="../../../css/mainPage.css">
 </head>
 <body>
-    <script src="../js/discussion.js"></script>
+    <script src="../../../js/discussion.js"></script>
     <nav class="navbar navbar-light bg-light">
-        <!-- replace the question with real question-->
-        <span class="navbar-brand mb-0 h1 big-text">discussion question</span>
+        <span class="navbar-brand mb-0 h1 big-text">Discussion Board</span>
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fas fa-bars dropbtn"></i></button>
             <div id="myDropdown" class="dropdown-content">
@@ -28,45 +27,46 @@
         <br>
         <br>
 
-        <div class="row">
-            <div class="col-8 p-5">
-                <div class="card">
-                    <!-- replace the name with sender's name -->
-                    <h5 class="card-header">Name</h5>
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <h5 class="card-title">Reply to: </h5>
-                            <h5 class="card-title ml-auto">Time</h5>
-                        </div>
-                        <!-- <h5 class="card-title">Reply to : Time</h5> -->
-                        <div class="card">
-                            <div class="card-body">
-                                This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.This is some text within a card body.
-                            </div>
-                        </div>
-                        <br>
+        <div class="card text-center">
+            <div class="card-header" id="due">
+                Featured
+            </div>
+            <div class="card-body">
+                <p class="card-text" id="discussion"></p>
+            </div>
+        </div>
+        <br>
 
-                        <div class="reply">
+        <template id="template">
+            <div class="card">
+                <h5 class="card-header name"></h5>
 
+                <div class="card-body">
+                    <div class="d-flex">
+                        <h5 class="card-title"></h5>
+                        <h5 class="card-title ml-auto date"></h5>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body contents">
+                        
                         </div>
                     </div>
                 </div>
+            </div>
+            <br>
+        </template>
+
+        <div class="row">
+            <div class="col-8 p-5" id="replies-lst">
+            
             </div>
 
             <div class="col-4 p-5">
                 <form method="POST" id="post-d-form">
                     <div class="form-row">
                         <div class="form-group col">
-                            <select class="custom-select mr-sm-2" id="title" required>
-                                <option value="1">some value</option>
-                                <option value="2">some value</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <textarea class="form-control" rows="10"></textarea>
+                            <textarea class="form-control" rows="10" id="discussion"></textarea>
                         </div>
                     </div>
             
@@ -79,6 +79,6 @@
         </div>
     </div>
 
-    <script src="../js/mainPage.js"></script>
+    <script src="../../../js/mainPage.js"></script>
 </body>
 </html>

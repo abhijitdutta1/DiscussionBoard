@@ -9,7 +9,7 @@ function main () {
 }
 
 async function logout () {
-    const res = await fetch('http://40.84.158.14/logout', {
+    const res = await fetch('http://52.179.6.145/logout', {
         method: 'post',
     });
     if (res.status === 200) {

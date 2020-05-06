@@ -26,6 +26,9 @@ class DiscussionModel {
         return await this.DAO.all('SELECT * FROM Discussion WHERE ClassID = ?', [ClassID]);
     }
 
+    async SearchDiscussion (qid) {
+        return await this.DAO.get('SELECT * FROM Discussion WHERE QID = ?', [qid]);
+    }
 }
 
 module.exports = DiscussionModel;

@@ -15,7 +15,7 @@ async function sendPass () {
     const isInstructor = document.getElementById("title").value;
     const password = document.getElementById('password').value;
 
-    const res = await fetch('http://40.84.158.14/login', {
+    const res = await fetch('http://52.179.6.145/login', {
         method: 'post',
         body: JSON.stringify({email, password, isInstructor}),
         headers: {'Content-Type': 'application/json'}
