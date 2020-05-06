@@ -253,6 +253,17 @@ app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
 }));
 
 /*
+        Discussion board
+*/
+app.get('/discussion', errorHandler(async (req, res) => {
+    if (req.session.isVerified) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'discussion.html'));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+/*
         Login
 */
 app.get('/', errorHandler(async (req, res) => {
