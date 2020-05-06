@@ -11,20 +11,19 @@ class DiscussionModel {
             QID INTEGER PRIMARY KEY AUTOINCREMENT,
             question TEXT,
             description TEXT,
-            endDate DATE,
-            endTime TEXT
+            due TEXT
         )`
         return await this.DAO.run(sql)
     }
 
-    async addDiscussion (classID, question, description, endDate, endTime) {
-        const sql = `INSERT INTO Discussion (classID, question, description, endDate, endTime) VALUES (?, ?, ?, ?, ?)`;
+    async addDiscussion (classID, question, description, datetimepicker1) {
+        const sql = `INSERT INTO Discussion (classID, question, description, due) VALUES (?, ?, ?, ?)`;
      
-        await this.DAO.run(sql, [classID, question, description, endDate, endTime]);
+        await this.DAO.run(sql, [classID, question, description, datetimepicker1]);
     }
 
     async SearchQuestion (ClassID) {
-        return await this.DAO.all('SELECT question FROM Discussion WHERE ClassID = ?', [ClassID]);
+        return await this.DAO.all('SELECT * FROM Discussion WHERE ClassID = ?', [ClassID]);
     }
 
 }

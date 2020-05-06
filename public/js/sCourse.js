@@ -20,7 +20,7 @@ function main () {
 async function registerCourse() {
     const code = document.getElementById('code').value;
 
-    const res = await fetch('http://52.179.6.145/sCourse', {
+    const res = await fetch('http://40.84.158.14/sCourse', {
         method: 'post',
         body: JSON.stringify({code}),
         headers: {'Content-Type': 'application/json'}
@@ -40,7 +40,7 @@ async function registerCourse() {
 }
 
 function getRegisteredClasses () {
-    fetch('http://52.179.6.145/registeredCourses', {
+    fetch('http://40.84.158.14/registeredCourses', {
         method: 'GET'
     }).then( res => {
         return res.json();
@@ -68,7 +68,7 @@ function render() {
 }
 
 async function logout () {
-    const res = await fetch('http://52.179.6.145/logout', {
+    const res = await fetch('http://40.84.158.14/logout', {
         method: 'post',
     });
     if (res.status === 200) {

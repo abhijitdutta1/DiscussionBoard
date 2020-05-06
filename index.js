@@ -205,7 +205,8 @@ app.get('/iDiscussion-list/:classID', errorHandler(async (req, res) => {
         rows = await Diss.SearchQuestion(req.params.classID); 
         // retrieve class   
         row = await Classes.searchClassByID(req.params.classID);
-        res.send(JSON.stringify({classes: rows, course: row.name}));
+        console.log(rows[0]);
+        res.send(JSON.stringify({discussions: rows, topic: row.question, QID: row.QID, username: req.session.name.name, course: row.name}));
     } else {
         res.redirect('/');
     }
@@ -227,26 +228,26 @@ app.post('/iCourse/:classID/iDiscussion', errorHandler(async (req, res) => {
         console.log(body.question);
         console.log(body.datetimepicker1);
         console.log(body.description);
-        res.sendStatus(200);
+        console.log(req.params.classID);
 
-        // if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
-        //     return res.sendStatus(400);
-        // }
+        if (body === undefined || (!body.question || !body.datetimepicker1 || !body.description)) {
+            return res.sendStatus(400);
+        }
 
-        // const {question, datetimepicker1, description} = body;
-        // const classID =""; //TODO 
+        const {question, datetimepicker1, description} = body;
+        const classID = req.params.classID;
 
-        // try {
-        //     await Diss.addDiscussion(classID, question, datetimepicker1, description);
-        //     res.sendStatus(200);
-        // }catch (err) {
-        //     if (err.code === 'SQLITE_CONSTRAINT') {
-        //         console.error(err);
-        //         res.sendStatus(409); // 409 Conflict
-        //     } else {
-        //         throw err;
-        //     }
-        // }
+        try {
+            await Diss.addDiscussion(classID, question, description, datetimepicker1);
+            res.sendStatus(200);
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
     } else {
         res.redirect('/');
     }

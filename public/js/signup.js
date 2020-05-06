@@ -22,7 +22,7 @@ function processForm (event) {
     }
     
     const data = {email, fullName, isInstructor, password};
-    fetch("http://52.179.6.145/signup", {
+    fetch("http://40.84.158.14/signup", {
         method: "post",
         body: JSON.stringify(data),
         headers: {"Content-Type": "application/json"}

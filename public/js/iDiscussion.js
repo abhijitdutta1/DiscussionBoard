@@ -1,15 +1,15 @@
 'use strict';
 
 const id = _id => document.getElementById(_id);
-// let default_items = '';
+let default_items = '';
 let local_items = [];
 
 document.querySelector('body').onload = main;
 
 function main () {
-    // default_items = id('class-list').innerHTML;
+    default_items = id('d-list').innerHTML;
 
-    getClassList();
+    getDissList();
 
     document.getElementById('discussionCreationForm').onsubmit = (event) => {
         event.preventDefault();
@@ -37,7 +37,7 @@ async function subjectForm () {
 
     if (res.status === 200) {
         alert('Discussion Created');
-        getClassList();
+        getDissList();
     } else if (res.status === 409) {
         alert('Discussion exists');
     } else {
@@ -45,16 +45,16 @@ async function subjectForm () {
     } 
 }
 
-function getClassList () {
+function getDissList () {
     let classID = window.location.href.split('/')[4]
-    fetch(`http://52.179.6.145/iDiscussion-list/${classID}`, {
+    fetch(`http://40.84.158.14/iDiscussion-list/${classID}`, {
         method: 'GET'
     }).then( res => {
         return res.json();
     }).then( data => {
-        local_items = data.classes;
+        local_items = data.discussions;
         // display class name
-        document.getElementById('welcome').textContent = `${data.course}`;
+        document.getElementById('welcome').textContent = `'${data.course}'` + ` by '${data.username}'`;
         render();
     }).catch( err => {
         console.log(err);
@@ -78,7 +78,7 @@ function render() {
 }
 
 async function logout () {
-    const res = await fetch('http://52.179.6.145/logout', {
+    const res = await fetch('http://40.84.158.14/logout', {
         method: 'post',
     });
     if (res.status === 200) {
