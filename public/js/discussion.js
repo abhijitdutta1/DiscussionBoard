@@ -18,7 +18,7 @@ function main () {
 }
 
 async function postDiscussion() {
-    const reply = document.getElementById('discussion').value;
+    const reply = document.getElementById('reply-post').value;
     let date = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString().replace(/:\d{2}\s/,' ');
 
     const res = await fetch(window.location.href, {

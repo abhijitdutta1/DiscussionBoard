@@ -256,7 +256,7 @@ app.get('/discussion-list/:QID', errorHandler(async (req, res) => {
         const rows = await Reply.getReply(req.params.QID);  
         const row = await Diss.SearchDiscussion(req.params.QID);
 
-        res.send(JSON.stringify({replies: rows, discussion: row, title: req.session.isInstructor}));
+        res.send(JSON.stringify({replies: rows, discussion: row}));
     } else {
         res.redirect('/');
     }
@@ -275,6 +275,7 @@ app.post('/sCourse/:classID/sDiscussion/:QID', errorHandler(async (req, res) => 
         const body = req.body;
 
         if (body === undefined || !body.reply || !body.date) {
+            console.log("Something wrong");
             return res.sendStatus(400);
         }
 
@@ -305,6 +306,35 @@ app.get('/iCourse/:classID/iDiscussion/:QID', errorHandler(async (req, res) => {
         res.redirect('/');
     }
 }));
+
+app.post('/iCourse/:classID/iDiscussion/:QID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        const body = req.body;
+
+        if (body === undefined || !body.reply || !body.date) {
+            return res.sendStatus(400);
+        }
+
+        const {reply, date} = body;
+        const qid = req.params.QID;
+        const user = req.session.name.name;
+
+        try {
+            await Reply.addReply(qid, reply, date, user);
+            res.sendStatus(200);
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
 
 /*
         Login
