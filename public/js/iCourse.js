@@ -30,7 +30,7 @@ async function instructorForm () {
 
     const data = {classID, name, description};
     console.log(`client: ${data}`);
-    const res = await fetch('http://52.179.6.145/iCourse', {
+    const res = await fetch('http://40.84.158.14/iCourse', {
         method: 'post',
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json'}
@@ -48,7 +48,7 @@ async function instructorForm () {
 
 
 function getClassList () {
-    fetch('http://52.179.6.145/iCourse-list', {
+    fetch('http://40.84.158.14/iCourse-list', {
         method: 'GET'
     }).then( res => {
         return res.json();
@@ -77,7 +77,7 @@ function render() {
 }
 
 async function logout () {
-    const res = await fetch('http://52.179.6.145/logout', {
+    const res = await fetch('http://40.84.158.14/logout', {
         method: 'post',
     });
     if (res.status === 200) {

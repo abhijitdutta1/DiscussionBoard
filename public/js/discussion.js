@@ -38,7 +38,7 @@ async function postDiscussion() {
 
 function getDiscussions() {
     let qid = window.location.href.split('/')[6]
-    fetch(`http://52.179.6.145/discussion-list/${qid}`, {
+    fetch(`http://40.84.158.14/discussion-list/${qid}`, {
         method: 'GET'
     }).then( res => {
         return res.json();
@@ -46,6 +46,7 @@ function getDiscussions() {
         local_items = data.replies;
         document.getElementById('due').textContent = `Due: ${data.discussion.due}`;
         document.getElementById('discussion').textContent = `${data.discussion.question}`;
+        document.getElementById('description').textContent = `${data.discussion.description}`;
         render();
     }).catch( err => {
         console.log(err);
@@ -63,12 +64,13 @@ function render() {
         new_li.querySelector('.name').textContent = local_items[i].user;
         new_li.querySelector('.date').textContent = local_items[i].date;
         new_li.querySelector('.contents').textContent = local_items[i].Reply;
+        new_li.querySelector('.contents').setAttribute('href', `${local_items[i].QID}/${local_items[i].ReplyID}/`);
         list_elt.appendChild(new_li);
     }
 }
 
 async function logout () {
-    const res = await fetch('http://52.179.6.145/logout', {
+    const res = await fetch('http://40.84.158.14/logout', {
         method: 'post',
     });
     if (res.status === 200) {

@@ -47,7 +47,7 @@ async function subjectForm () {
 
 function getDissList () {
     let classID = window.location.href.split('/')[4]
-    fetch(`http://52.179.6.145/iDiscussion-list/${classID}`, {
+    fetch(`http://40.84.158.14/iDiscussion-list/${classID}`, {
         method: 'GET'
     }).then( res => {
         return res.json();
@@ -78,7 +78,7 @@ function render() {
 }
 
 async function logout () {
-    const res = await fetch('http://52.179.6.145/logout', {
+    const res = await fetch('http://40.84.158.14/logout', {
         method: 'post',
     });
     if (res.status === 200) {

@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discussion Board</title>
+    <title>Reply Board</title>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <link rel="stylesheet" href="../../../css/mainPage.css">
+    <link rel="stylesheet" href="../../../../../css/mainPage.css">
 </head>
 <body>
-    <script src="../../../js/discussion.js"></script>
+    <script src="../../../../../js/reply2reply.js"></script>
     <nav class="navbar navbar-light bg-light">
-        <span class="navbar-brand mb-0 h1 big-text">Discussion Board</span>
+        <span class="navbar-brand mb-0 h1 big-text">Reply Board</span>
         <div class="dropdown">
             <button onclick="myFunction()" class="dropbtn"><i class="fas fa-bars dropbtn"></i></button>
             <div id="myDropdown" class="dropdown-content">
@@ -32,57 +32,56 @@
             </div>
             <div class="card-body">
                 <p class="card-text" id="discussion"></p>
-                <p class="card-text" id="description"></p>
             </div>
         </div>
         <br>
 
-        <form method="POST" id="post-d-form">
-            <template id="template">
-                <div class="card">
-                    <h5 class="card-header name"></h5>
-
-                    <div class="card-body">
-                        <div class="d-flex">
-                            <h6 class="card-title" id="re"></h6>
-                            <h6 class="card-title ml-auto date"></h6>
-                        </div>
-
-                        <div class="card">
-                            <div>
-                            <a href="#" class="card-body contents"></a>
-                            </div>
-                        </div>
+        <template id="template">
+            <div class="card">
+                <h5 class="card-header name" id="name"></h5>
+                
+                <div class="card-body">
+                    <div class="d-flex">
+                        <h6 class="card-title" id="re"></h6>
+                        <h6 class="card-title ml-auto date" id="date"></h6>
                     </div>
-                    <div class="reply-group col">
-                        <p class="reply-count" id="replycount"></p>
-                    </div>
-                </div>
-                <br>
-            </template>
-
-            <div class="row">
-                <div class="col-8 p-5" id="replies-lst">
                     
-                
-                </div>
-
-                <div class="col-4 p-5">
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <textarea class="form-control" rows="5" id="reply-post" placeholder="New Thread" required></textarea>
-                            </div>
-                        </div>
-                
-                        <br>
-                        <div class="form-row">
-                            <button type="submit" class="btn btn-danger">Post</button>
+                    <div class="card">
+                        <div class="card-body contents" id="contents">
+                        
                         </div>
                     </div>
                 </div>
-        </form>
+                <div class="reply-group col">
+                    <p class="reply-count" id="replycount"></p>
+                </div>
+            </div>
+            <br>
+        </template>
+        
+        <div class="row">
+            <div class="col-8 p-5" id="replies-lst">
+                
+                
+            </div>
+            
+            <div class="col-4 p-5">
+                <form method="POST" id="post-R2R-form">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <textarea class="form-control" rows="5" id="reply-post" placeholder="Reply to this Thread" required></textarea>
+                        </div>
+                    </div>
+                
+                    <br>
+                    <div class="form-row">
+                        <button type="submit" class="btn btn-danger">Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <script src="../../../js/mainPage.js"></script>
+    <script src="../../../../../js/mainPage.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ const ClassModel         = require('./Models/ClassModel');
 const Student2ClassModel = require('./Models/Student2ClassModel');
 const DiscussionModel    = require('./Models/DiscussionModel');
 const RepliesModel       = require('./Models/RepliesModel');
-const Reply2replyModel   = require('./Models/Reply2ReplyModel');
+const Reply2ReplyModel   = require('./Models/Reply2ReplyModel');
 
 const redisClient = redis.createClient();
 
@@ -335,6 +335,98 @@ app.post('/iCourse/:classID/iDiscussion/:QID', errorHandler(async (req, res) => 
     }
 }));
 
+/*
+        Reply 2 reply
+*/
+
+app.get('/discussion-list/:QID/:ReplyID', errorHandler(async (req, res) => {
+    if (req.session.isVerified) {
+        const rows = await Reply2Reply.getReply2Reply(req.params.ReplyID);
+        const row = await Reply.searchReply(req.params.ReplyID);
+
+        const row2 = await Diss.SearchDiscussion(req.params.QID);
+        console.log(rows);
+        
+
+        res.send(JSON.stringify({reply2reply: rows, replies: row, question: row2}));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/sCourse/:classID/sDiscussion/:QID/:ReplyID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'reply2reply.html'));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.post('/sCourse/:classID/sDiscussion/:QID/:ReplyID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 1) {
+        const body = req.body;
+
+        if (body === undefined || !body.reply || !body.date) {
+            return res.sendStatus(400);
+        }
+
+        const {reply, date} = body;
+        const ReplyID = req.params.ReplyID;
+        const user = req.session.name.name;
+
+        try {
+            await Reply2Reply.addReply2Reply(ReplyID, reply, date, user);
+            res.sendStatus(200);
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.get('/iCourse/:classID/iDiscussion/:QID/:ReplyID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        res.sendFile(path.join(__dirname, 'public', 'html', 'reply2reply.html'));
+    } else {
+        res.redirect('/');
+    }
+}));
+
+app.post('/iCourse/:classID/iDiscussion/:QID/:ReplyID', errorHandler(async (req, res) => {
+    if (req.session.isVerified && req.session.isInstructor === 2) {
+        const body = req.body;
+
+        if (body === undefined || !body.reply || !body.date) {
+            return res.sendStatus(400);
+        }
+
+        const {reply, date} = body;
+        const ReplyID = req.params.ReplyID;
+        const user = req.session.name.name;
+
+        try {
+            await Reply2Reply.addReply2Reply(ReplyID, reply, date, user);
+            res.sendStatus(200);
+            console.log("Stored");
+        }catch (err) {
+            if (err.code === 'SQLITE_CONSTRAINT') {
+                console.error(err);
+                res.sendStatus(409); // 409 Conflict
+            } else {
+                throw err;
+            }
+        }
+    } else {
+        res.redirect('/');
+    }
+}));
+
 
 /*
         Login
@@ -440,6 +532,8 @@ async function initDB () {
     await Student2Class.createTable();
     Reply = new RepliesModel(dao);
     await Reply.createTable();
+    Reply2Reply = new Reply2ReplyModel(dao);
+    await Reply2Reply.createTable();
     Auth = new AuthController(dao);
 }
 

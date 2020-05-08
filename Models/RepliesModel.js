@@ -26,6 +26,10 @@ class RepliesModel {
         return await this.DAO.all('SELECT * FROM Replies WHERE QID = ?', [QID]);
     }
 
+    async searchReply (ReplyID) {
+        return await this.DAO.all('SELECT * FROM Replies WHERE ReplyID = ?', [ReplyID]);
+    }
+
 }
 
 module.exports = RepliesModel;
